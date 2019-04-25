@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_spring-helloworld-demo" default="compile.module.spring-helloworld-demo">
+  <dirname property="module.spring-helloworld-demo.basedir" file="${ant.file.module_spring-helloworld-demo}"/>
+  
+  <property name="module.jdk.home.spring-helloworld-demo" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.spring-helloworld-demo" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.spring-helloworld-demo" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.spring-helloworld-demo" value="-encoding UTF-8 -source 6 -target 6 ${compiler.args}"/>
+  
+  <property name="spring-helloworld-demo.output.dir" value="${module.spring-helloworld-demo.basedir}/out/production/spring-HelloWorld-Demo"/>
+  <property name="spring-helloworld-demo.testoutput.dir" value="${module.spring-helloworld-demo.basedir}/out/test/spring-HelloWorld-Demo"/>
+  
+  <path id="spring-helloworld-demo.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="spring-helloworld-demo.module.production.classpath">
+    <path refid="${module.jdk.classpath.spring-helloworld-demo}"/>
+    <path refid="library.spring-4.3.18.release.classpath"/>
+    <path refid="library.spring_mvc-4.3.18.release.classpath"/>
+  </path>
+  
+  <path id="spring-helloworld-demo.runtime.production.module.classpath">
+    <pathelement location="${spring-helloworld-demo.output.dir}"/>
+    <path refid="library.spring-4.3.18.release.classpath"/>
+    <path refid="library.spring_mvc-4.3.18.release.classpath"/>
+  </path>
+  
+  <path id="spring-helloworld-demo.module.classpath">
+    <path refid="${module.jdk.classpath.spring-helloworld-demo}"/>
+    <pathelement location="${spring-helloworld-demo.output.dir}"/>
+    <path refid="library.spring-4.3.18.release.classpath"/>
+    <path refid="library.spring_mvc-4.3.18.release.classpath"/>
+  </path>
+  
+  <path id="spring-helloworld-demo.runtime.module.classpath">
+    <pathelement location="${spring-helloworld-demo.testoutput.dir}"/>
+    <pathelement location="${spring-helloworld-demo.output.dir}"/>
+    <path refid="library.spring-4.3.18.release.classpath"/>
+    <path refid="library.spring_mvc-4.3.18.release.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.spring-helloworld-demo">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.spring-helloworld-demo">
+    <patternset refid="excluded.from.module.spring-helloworld-demo"/>
+  </patternset>
+  
+  <path id="spring-helloworld-demo.module.sourcepath">
+    <dirset dir="${module.spring-helloworld-demo.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.spring-helloworld-demo" depends="compile.module.spring-helloworld-demo.production,compile.module.spring-helloworld-demo.tests" description="Compile module spring-HelloWorld-Demo"/>
+  
+  <target name="compile.module.spring-helloworld-demo.production" depends="register.custom.compilers" description="Compile module spring-HelloWorld-Demo; production classes">
+    <mkdir dir="${spring-helloworld-demo.output.dir}"/>
+    <javac2 destdir="${spring-helloworld-demo.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.spring-helloworld-demo}/javac">
+      <compilerarg line="${compiler.args.spring-helloworld-demo}"/>
+      <bootclasspath refid="spring-helloworld-demo.module.bootclasspath"/>
+      <classpath refid="spring-helloworld-demo.module.production.classpath"/>
+      <src refid="spring-helloworld-demo.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.spring-helloworld-demo"/>
+    </javac2>
+    
+    <copy todir="${spring-helloworld-demo.output.dir}">
+      <fileset dir="${module.spring-helloworld-demo.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.spring-helloworld-demo.tests" depends="register.custom.compilers,compile.module.spring-helloworld-demo.production" description="compile module spring-HelloWorld-Demo; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.spring-helloworld-demo" description="cleanup module">
+    <delete dir="${spring-helloworld-demo.output.dir}"/>
+    <delete dir="${spring-helloworld-demo.testoutput.dir}"/>
+  </target>
+</project>
